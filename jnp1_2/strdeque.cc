@@ -3,51 +3,64 @@
 #include <deque>
 #include <string>
 #include "cstrdeque"
+#include "cstrdequeconst"
 
 using namespace std;
 
 namespace jnp1
 {
 	namespace {
-
-		map < unsigned long, deque <string> > Mapa;
-
+		map<unsigned long, deque <string> >& Map()
+		{
+			static map<unsigned long, deque <string> >* myMap =
+				new map< unsigned long, deque<string> > ();
+			return *myMap;
+		}
 	}
 
 	unsigned long strdeque_new() {
 		static unsigned long id = 0;
-
 		deque <string> q;
-		Mapa[id] = q;
+		Map() [id] = q;
 		return id++;
 	}
 
 	void strdeque_delete(unsigned long id) {
-		Mapa.erase(id);
+		if(id == emptystrdeque())
+		{
+			//TODO PRINT DEBUG INFO
+			return;
+		}
+		Map().erase(id);
 	}
 
 	size_t strdeque_size(unsigned long id) {
-		if(! Mapa.empty() && Mapa.find(id)->first == id) {
-			return Mapa.find(id)->second.size();
+		if(! Map().empty() && Map().find(id)->first == id) {
+			return Map().find(id)->second.size();
 		}
 		else
 			return 0;
 	}
 
 	void strdeque_insert_at(unsigned long id, size_t pos, const char* value) {
-		if(! Mapa.empty() && Mapa.find(id)->first == id && value != NULL) {
+		if(id == emptystrdeque())
+		{
+			//TODO PRINT DEBUG INFO
+			return;
+		}
+		if(! Map().empty() && Map().find(id)->first == id && value != NULL) {
 			string s (value);
 			if(strdeque_size(id) <= pos) {
-				Mapa.find(id)->second.push_back(s);
+				Map().find(id)->second.push_back(s);
 			}
 			else {
 				if(pos == 0) {
-					Mapa.find(id)->second.push_front(s);
+					Map().find(id)->second.push_front(s);
 				}
 				else {
-					deque<string>::iterator it = Mapa.find(id)->second.begin();
+					deque<string>::iterator it = Map().find(id)->second.begin();
 					it = it + (pos - 1);
-					Mapa.find(id)->second.insert(it, s);
+					Map().find(id)->second.insert(it, s);
 				}
 			}
 		}
@@ -55,15 +68,15 @@ namespace jnp1
 
 	void strdeque_remove_at(unsigned long id, size_t pos) {
 		if(strdeque_size(id) > pos) {
-			deque<string>::iterator it = Mapa.find(id)->second.begin();
+			deque<string>::iterator it = Map().find(id)->second.begin();
 			it = it + pos;
-			Mapa.find(id)->second.erase(it);
+			Map().find(id)->second.erase(it);
 		}
 	}
 
 	const char* strdeque_get_at(unsigned long id, size_t pos) {
 		if(strdeque_size(id) > pos) {
-			return Mapa.find(id)->second.at(pos).c_str();
+			return Map().find(id)->second.at(pos).c_str();
 		}
 		else {
 			return NULL;
@@ -72,14 +85,14 @@ namespace jnp1
 
 	// usuwa elementy, czy usuwa kolejke?
 	void strdeque_clear(unsigned long id) {
-		Mapa.erase(id);
+		Map().erase(id);
 	}
 
 	/*
 	 * To usuwa elementy.
 	 void strdeque_clear(unsigned long id) {
 	 if(strdeque_size(id) > 0) {
-	 Mapa.find(id)->second.clear();
+	 Map().find(id)->second.clear();
 	 }
 	 }
 	 */
@@ -91,9 +104,9 @@ namespace jnp1
 			return -1;
 		if(strdeque_size(id2) == 0)
 			return 1;
-		if(Mapa.find(id1)->second == Mapa.find(id2)->second)
+		if(Map().find(id1)->second == Map().find(id2)->second)
 			return 0;
-		if(Mapa.find(id1)->second < Mapa.find(id2)->second)
+		if(Map().find(id1)->second < Map().find(id2)->second)
 			return -1;
 		return 1;
 	}

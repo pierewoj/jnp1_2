@@ -1,8 +1,12 @@
+#include<iostream>
 #include "cstrdequeconst"
+#include "cstrdeque"
 
 namespace jnp1{
+	
 	unsigned long emptystrdeque()
 	{
-		return 0;
+		static unsigned long empty = jnp1::strdeque_new();
+		return empty;
 	}
 }
