@@ -3,13 +3,13 @@
 
 #ifdef __cplusplus
 namespace jnp1 {
-	extern "C" {
+extern "C" {
 #endif
 
-		unsigned long emptystrdeque();
+unsigned long emptystrdeque();
 
 #ifdef __cplusplus
-	}
+}
 }
 #endif
 
