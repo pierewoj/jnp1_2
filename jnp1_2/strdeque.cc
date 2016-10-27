@@ -7,12 +7,6 @@
 
 using namespace std;
 
-#ifndef DNDEBUG
-const bool debug = true;
-#else
-const bool debug = false;
-#endif
-
 namespace jnp1 {
 	namespace {
 
@@ -22,6 +16,14 @@ namespace jnp1 {
 					new map< unsigned long, deque<string> > ();
 			return *myMap;
 		}
+		
+		bool debug() {
+			#ifndef NDEBUG
+				return true;
+			#else
+				return false;
+			#endif
+		}
 	}
 
 	unsigned long strdeque_new()
@@ -29,7 +31,8 @@ namespace jnp1 {
 		static unsigned long id = 0;
 		deque <string> q;
 		Map() [id] = q;
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_new:\n";
 		}
 		return id++;
@@ -37,33 +40,35 @@ namespace jnp1 {
 
 	void strdeque_delete(unsigned long id)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_delete: ";
 		}
 		if (id == emptystrdeque()) {
-			if (debug) {
+			if (debug()) {
 				cerr << "attempt to delete the Empty Deque\n";
 			}
 			return;
 		}
 		Map().erase(id);
-		if (debug) {
+		if (debug()) {
 			cerr << "deleted\n";
 		}
 	}
 
 	size_t strdeque_size(unsigned long id)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_size: ";
 		}
 		if (!Map().empty() && Map().find(id)->first == id) {
-			if (debug) {
+			if (debug()) {
 				cerr << "OK\n";
 			}
 			return Map().find(id)->second.size();
 		} else {
-			if (debug) {
+			if (debug()) {
 				cerr << "not exist\n";
 			}
 			return 0;
@@ -72,11 +77,12 @@ namespace jnp1 {
 
 	void strdeque_insert_at(unsigned long id, size_t pos, const char* value)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_insert_at: ";
 		}
 		if (id == emptystrdeque()) {
-			if (debug) {
+			if (debug()) {
 				cerr << "attempt to insert into the Empty Deque\n";
 			}
 			return;
@@ -94,7 +100,7 @@ namespace jnp1 {
 					Map().find(id)->second.insert(it, s);
 				}
 			}
-			if (debug) {
+			if (debug()) {
 				cerr << "inserted\n";
 			}
 		}
@@ -102,18 +108,19 @@ namespace jnp1 {
 
 	void strdeque_remove_at(unsigned long id, size_t pos)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_remove_at:";
 		}
 		if (strdeque_size(id) > pos) {
 			deque<string>::iterator it = Map().find(id)->second.begin();
 			it = it + pos;
 			Map().find(id)->second.erase(it);
-			if (debug) {
+			if (debug()) {
 				cerr << "removed\n";
 			}
 		} else {
-			if (debug) {
+			if (debug()) {
 				cerr << " element not exist\n";
 			}
 		}
@@ -121,16 +128,17 @@ namespace jnp1 {
 
 	const char* strdeque_get_at(unsigned long id, size_t pos)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_get_at: ";
 		}
 		if (strdeque_size(id) > pos) {
-			if (debug) {
+			if (debug()) {
 				cerr << "OK\n";
 			}
 			return Map().find(id)->second.at(pos).c_str();
 		} else {
-			if (debug) {
+			if (debug()) {
 				cerr << " element not exist\n";
 			}
 			return NULL;
@@ -139,16 +147,17 @@ namespace jnp1 {
 
 	void strdeque_clear(unsigned long id)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_clear: ";
 		}
 		if (strdeque_size(id) > 0) {
 			Map().find(id)->second.clear();
-			if (debug) {
+			if (debug()) {
 				cerr << "cleared\n";
 			}
 		} else {
-			if (debug) {
+			if (debug()) {
 				cerr << "not exist or has 0 elements\n";
 			}
 		}
@@ -156,7 +165,8 @@ namespace jnp1 {
 
 	int strdeque_comp(unsigned long id1, unsigned long id2)
 	{
-		if (debug) {
+		if (debug()) {
+			ios_base::Init();
 			cerr << "strdeque_comp:\n";
 		}
 		if (strdeque_size(id1) == 0 && strdeque_size(id2) == 0)
