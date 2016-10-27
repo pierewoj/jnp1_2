@@ -5,11 +5,13 @@
 #include <map>
 #include <string>
 
-using namespace std;
-
 namespace jnp1 {
-namespace {
 
+using std::deque;
+using std::string;
+using std::map;
+
+namespace {
 map<unsigned long, deque<string>> &deque_map() {
   static map<unsigned long, deque<string>> *my_map =
       new map<unsigned long, deque<string>>();
